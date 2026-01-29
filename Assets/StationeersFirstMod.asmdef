@@ -1,0 +1,29 @@
+{
+    "name": "com.dipolecat.extensionlib",
+    "rootNamespace": "com.dipolecat.extensionlib",
+    "references": [
+        "Unity.TextMeshPro",
+        "Unity.Serialization"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Assembly-CSharp.dll",
+        "Assembly-CSharp-firstpass.dll",
+        "BepInEx.dll",
+        "0Harmony.dll",
+        "RW.RocketNet.dll",
+        "LaunchPadBooster.dll",
+        "Mono.Cecil.dll",
+        "Mono.Cecil.Rocks.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
