@@ -1,6 +1,6 @@
 {
-    "name": "com.dipolecat.extensionlib",
-    "rootNamespace": "com.dipolecat.extensionlib",
+    "name": "ExtensionLib",
+    "rootNamespace": "Com.Dipolecat.ExtensionLib",
     "references": [
         "Unity.TextMeshPro",
         "Unity.Serialization"
@@ -17,7 +17,6 @@
         "Assembly-CSharp-firstpass.dll",
         "BepInEx.dll",
         "0Harmony.dll",
-        "RW.RocketNet.dll",
         "LaunchPadBooster.dll",
         "Mono.Cecil.dll",
         "Mono.Cecil.Rocks.dll"

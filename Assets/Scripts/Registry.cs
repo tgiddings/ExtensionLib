@@ -8,6 +8,7 @@ using HarmonyLib;
 using Unity.Properties;
 using UnityEditor.PackageManager;
 using Com.DipoleCat.ExtensionLib.Networking;
+using System.Collections;
 
 namespace Com.DipoleCat.ExtensionLib
 {
@@ -199,7 +200,7 @@ namespace Com.DipoleCat.ExtensionLib
 
         public IEnumerable<T> OrderedData => data_list.AsReadOnly();
 
-        public IEnumerable<NamespacedId> OrderedIds => throw new NotImplementedException();
+        public IEnumerable<NamespacedId> OrderedIds => id_list.AsReadOnly();
 
         public SimpleRegistry(INetworkCodec<T> codec){
             this.codec = codec;
@@ -300,6 +301,10 @@ namespace Com.DipoleCat.ExtensionLib
 
         public int Count => id_list.Count;
 
+        public IEnumerable<T> OrderedData => data_list.AsReadOnly();
+
+        public IEnumerable<NamespacedId> OrderedIds => id_list.AsReadOnly();
+
         internal FrozenRegistry(
             Dictionary<NamespacedId,uint> id_map,
             List<NamespacedId> id_list,
@@ -359,6 +364,8 @@ namespace Com.DipoleCat.ExtensionLib
         internal readonly List<NamespacedId> id_list = new();
 
         public int Count => id_list.Count;
+
+        public IEnumerable<NamespacedId> OrderedIds => id_list.AsReadOnly();
 
         public void Deregister(NamespacedId id)
         {
@@ -426,6 +433,8 @@ namespace Com.DipoleCat.ExtensionLib
         internal readonly List<NamespacedId> id_list = new();
 
         public int Count => id_list.Count;
+
+        public IEnumerable<NamespacedId> OrderedIds => id_list.AsReadOnly();
 
         public FrozenRegistry(SimpleRegistry registry):
             this(registry.id_map,registry.id_list){}

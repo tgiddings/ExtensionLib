@@ -97,10 +97,9 @@ public class TestRegistries{
             $"registry allowed ID {test_value} to be registered twice");
         }
 
-        using MemoryStream stream = new(5);
-        var writer = new RocketBinaryWriter(stream);
+        var writer = new RocketBinaryWriter(5000);
         registry.Serialize(writer);
-        stream.Seek(0,SeekOrigin.Begin);
+        using var stream = new MemoryStream(writer.AsSpan().ToArray());
         var reader = new RocketBinaryReader(stream);
         IRegistry registry2 = Registry.Deserialize(reader);
 
