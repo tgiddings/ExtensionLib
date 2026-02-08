@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Assets.Scripts.Atmospherics;
 using Assets.Scripts.Networking;
+using Com.DipoleCat.ExtensionLib.Atmospherics;
 using Com.DipoleCat.ExtensionLib.Networking;
 using HarmonyLib;
 using Unity.Properties;
@@ -20,10 +23,14 @@ namespace Com.DipoleCat.ExtensionLib
         public static bool IsAuthoritative {get; private set;} = true;
         public static bool IsSyncing {get; private set;} = false;
 
-        public static IRegistry Fluids => 
-            IsAuthoritative? 
-            local_registries[new NamespacedId("extensionlib:fluids")]: 
-            synced_registries[new NamespacedId("extensionlib:fluids")];
+        public static IRegistry<IMaterialProperties> Materials => 
+            GetRegistry<IMaterialProperties>(MaterialRegistryId)!;
+        public static IRegistry<IPhaseProperties> Phases => 
+            GetRegistry<IPhaseProperties>(PhaseRegistryId)!;
+
+        public static NamespacedId MaterialRegistryId => new("extensionlib:materials");
+        public static NamespacedId PhaseRegistryId => new("extensionlib:phases");
+
         private static readonly HashSet<NamespacedId> expectedRegistries = new();
 
         internal static void BeginSync(IEnumerable<NamespacedId> registries){
@@ -60,10 +67,15 @@ namespace Com.DipoleCat.ExtensionLib
         }
 
         public static IRegistry? GetRegistry(NamespacedId registryId){
-            throw new NotImplementedException();
+            if(IsAuthoritative){
+                return local_registries[registryId];
+            }
+            else return synced_registries[registryId];
         }
 
-        public static IRegistry<T>? GetRegistry<T>(NamespacedId registryId) where T: struct{
+        public static IRegistry<T>? GetRegistry<T>(NamespacedId registryId)
+            where T: class
+        {
             return GetRegistry(registryId) as IRegistry<T>;
         }
 
@@ -73,11 +85,129 @@ namespace Com.DipoleCat.ExtensionLib
             return registry;
         }
 
-        public static IRegistry<T> CreateRegistry<T>(NamespacedId registryId, INetworkCodec<T> codec) where T: struct{
+        public static IMutableRegistry<T> CreateRegistry<T>(NamespacedId registryId, INetworkCodec<T> codec)
+            where T: class
+        {
             var registry = new SimpleRegistry<T>(codec);
             local_registries[registryId] = registry;
             codecs[registryId] = codec;
             return registry;
+        }
+
+        public static void Register(IMaterialProperties material, bool registerPhases = true){
+            if (Materials is IMutableRegistry<IMaterialProperties> mutable){
+                mutable.Register(material.Id,material);
+                if(registerPhases){
+                    RegisterAll(material.Phases);
+                }
+            }
+            else throw new InvalidOperationException("materials registry is frozen (synced from connected server)");
+        }
+
+        public static void Register(IPhaseProperties phase){
+            if (Phases is IMutableRegistry<IPhaseProperties> mutable){
+                mutable.Register(phase.Id,phase);
+            }
+            else throw new InvalidOperationException("phases registry is frozen (synced from connected server)");
+        }
+
+        public static void RegisterAll(IEnumerable<IPhaseProperties> phases){
+            foreach (var phase in phases){
+                Register(phase);
+            }
+        }
+
+        private static EvaporationCoefficients GetVanillaLiquidCoefficients(Chemistry.GasType gasType){
+            var stationeersAssembly = Assembly.GetAssembly(typeof(Mole));
+            var moleType = stationeersAssembly.GetType(nameof(Mole));
+            var antoineAMethod = moleType.GetMethod("EvaporationCoefficientA");
+            var antoineBMethod = moleType.GetMethod("EvaporationCoefficientB");
+
+            return new EvaporationCoefficients(
+                (double)antoineAMethod.Invoke(null, new object[]{gasType}),
+                (double)antoineBMethod.Invoke(null, new object[]{gasType})
+            );
+        }
+
+        private static VanillaMaterialBuilder BuildVanilla(
+            string name,
+            Chemistry.GasType gasType
+        ){
+            var liquidType = MoleHelper.CondensationType(gasType);
+            return new VanillaMaterialBuilder(
+                new NamespacedId("stationeers",name),
+                Mole.MolarMass(gasType),
+                Mole.MolarVolume(liquidType).ToDouble(),
+                new SpecificHeat(Chemistry.SpecificHeat(gasType)),
+                GetVanillaLiquidCoefficients(liquidType),
+                new SpecificHeat(Mole.LatentHeatOfVaporization(gasType)),
+                Mole.FreezingTemperature(gasType),
+                Mole.MaxLiquidTemperature(gasType),
+                Mole.MinLiquidPressure(gasType)
+            );
+        }
+
+        static Registries(){
+            CreateRegistry(MaterialRegistryId,new JsonSerializationCodec<IMaterialProperties>());
+            CreateRegistry(PhaseRegistryId,new JsonSerializationCodec<IPhaseProperties>());
+
+            //materials and their phases
+            var oxygen = BuildVanilla(
+                "oxygen",
+                Chemistry.GasType.Oxygen
+            )
+            .Oxidizer(
+                MoleQuantity.One,
+                new List<KeyValuePair<NamespacedId,MoleQuantity>>(){
+                    new (new NamespacedId("stationeers","pollutant"), MoleQuantity.One),
+                    new (new NamespacedId("stationeers","carbon_dioxide"), MoleQuantity.One)
+                }
+            )
+            .Build();
+            Register(oxygen);
+
+            var carbonDioxide = BuildVanilla(
+                "carbon_dioxide",
+                Chemistry.GasType.CarbonDioxide
+            )
+            .Build();
+            Register(carbonDioxide);
+
+            var volatiles = BuildVanilla(
+                "volatiles",
+                Chemistry.GasType.Volatiles
+            )
+            .Fuel(
+                MoleQuantity.One,
+                new List<KeyValuePair<NamespacedId,MoleQuantity>>(){
+                    new (new NamespacedId("stationeers","carbon_dioxide"), new MoleQuantity(2.0))
+                }
+            )
+            .Build();
+            Register(volatiles);
+
+            var nitrogen = BuildVanilla(
+                "nitrogen",
+                Chemistry.GasType.Nitrogen
+            )
+            .Build();
+            Register(nitrogen);
+
+            var water = BuildVanilla(
+                "water",
+                Chemistry.GasType.Steam
+            )
+            .Build();
+            Register(water);
+
+            //TODO: polluted water, changes materials on evaporation
+
+            var nitrousOxide = BuildVanilla(
+                "nitrous_oxide",
+                Chemistry.GasType.NitrousOxide
+            )
+            .Build();
+            Register(nitrousOxide);
         }
     }
 }

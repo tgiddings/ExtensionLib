@@ -107,7 +107,7 @@ namespace Com.DipoleCat.ExtensionLib.Networking{
             DataType= dataType ?? throw new ArgumentNullException("dataType");
             Registry= registry ?? throw new ArgumentNullException("registry");
         }
-        public static RegistryDataMessage Make<T>(NamespacedId registryId,IRegistry<T> registry) where T: struct{
+        public static RegistryDataMessage Make<T>(NamespacedId registryId,IRegistry<T> registry) where T: class{
             return new RegistryDataMessage(registryId,typeof(T),registry);
         }
         public override void Deserialize(RocketBinaryReader reader)

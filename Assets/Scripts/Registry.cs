@@ -27,7 +27,7 @@ namespace Com.DipoleCat.ExtensionLib
             return new FrozenRegistry(id_map,id_list);
         }
 
-        public static IRegistry<T> Deserialize<T>(INetworkCodec<T> codec, RocketBinaryReader reader) where T: struct{
+        public static IRegistry<T> Deserialize<T>(INetworkCodec<T> codec, RocketBinaryReader reader) where T: class{
             var entries = Serialization.ReadArray(new NetworkEntryCodec<T>(codec),reader);
             Dictionary<NamespacedId,uint> id_map = new(entries.Length);
             List<NamespacedId> id_list = new(entries.Length);
@@ -77,7 +77,7 @@ namespace Com.DipoleCat.ExtensionLib
     /// </remarks>
     /// <seealso cref="IRegistry"/>
     /// <seealso cref="IMutableRegistry"/>
-    public interface IRegistry<T>: IRegistry where T: struct{
+    public interface IRegistry<T>: IRegistry where T: class{
         public IEnumerable<T> OrderedData {get;}
         public T? GetData(uint index);
         public T? GetData(NamespacedId id){
@@ -109,7 +109,7 @@ namespace Com.DipoleCat.ExtensionLib
     /// </summary>
     /// <seealso cref="IRegistry{T}"/>
     /// <seealso cref="IMutableRegistry"/>
-    public interface IMutableRegistry<T>: IRegistry<T> where T: struct {
+    public interface IMutableRegistry<T>: IRegistry<T> where T: class {
         /// <exception cref="ArgumentException"><paramref name="id"/> has already been registered </exception>
         public uint Register(NamespacedId id, T data);
         /// <remarks>
@@ -184,7 +184,7 @@ namespace Com.DipoleCat.ExtensionLib
     }
 
     //note: not thread-safe
-    public sealed class SimpleRegistry<T>: IMutableRegistry<T> where T: struct
+    public sealed class SimpleRegistry<T>: IMutableRegistry<T> where T: class
     {
         internal readonly Dictionary<NamespacedId,uint> id_map = new();
 
@@ -279,7 +279,7 @@ namespace Com.DipoleCat.ExtensionLib
                     let id = GetId((uint)index)
                     let data = GetData((uint)index)
                     orderby index
-                    select new NetworkEntry<T>(id.Value,data.Value)
+                    select new NetworkEntry<T>(id.Value,data)
                 ),
                 new NetworkEntryCodec<T>(codec),
                 writer
@@ -287,7 +287,7 @@ namespace Com.DipoleCat.ExtensionLib
         }
     }
 
-    internal sealed class FrozenRegistry<T> : IRegistry<T> where T : struct
+    internal sealed class FrozenRegistry<T> : IRegistry<T> where T : class
     {
         private readonly Dictionary<NamespacedId,uint> id_map;
 
@@ -348,7 +348,7 @@ namespace Com.DipoleCat.ExtensionLib
                     let id = GetId((uint)index)
                     let data = GetData((uint)index)
                     orderby index
-                    select new NetworkEntry<T>(id.Value,data.Value)
+                    select new NetworkEntry<T>(id.Value,data)
                 ),
                 new NetworkEntryCodec<T>(codec),
                 writer

@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Assets.Scripts.Networking;
-using Assets.Scripts.Util;
-using Com.DipoleCat.ExtensionLib;
-using Unity.Serialization;
-using Unity.Serialization.Json;
+using Newtonsoft.Json;
 
 namespace Com.DipoleCat.ExtensionLib.Networking
 {
@@ -48,45 +44,48 @@ namespace Com.DipoleCat.ExtensionLib.Networking
     }
 
     /// <summary>
-    /// Serializes and Deserializes <typeparam cref="T"/> using the com.unity.serialization package.
-    /// Note that the serialization format is JSON, and is achieved with reflection,
+    /// Serializes and Deserializes <typeparam cref="T"/> using the newtonsoft json converter in the vanilla game.
+    /// Note that the serialization format is text-based, and is achieved with reflection,
     /// so a custom codec is recommended for types which are frequently serialized
     /// </summary>
-    public readonly struct UnitySerializationCodec<T> : INetworkCodec<T>
+    public class JsonSerializationCodec<T> : INetworkCodec<T>
     {
-        private readonly List<IJsonAdapter>? user_adapters;
-        private static readonly List<IJsonAdapter> builtin_adapters = new (new[]{new IdAdapter()});
+        private readonly List<JsonConverter>? user_converters;
+        private static readonly List<JsonConverter> builtin_converters = new (new[]{new IdAdapter()});
 
-        private readonly List<IJsonAdapter> Adapters {
+        private List<JsonConverter> Converters {
             get {
-                var adapters = new List<IJsonAdapter>(builtin_adapters);
-                if(user_adapters!=null) adapters.AddRange(user_adapters);
-                return adapters;
+                var converters = new List<JsonConverter>(builtin_converters);
+                if(user_converters!=null) converters.AddRange(user_converters);
+                return converters;
             }
         }
 
-        private readonly JsonSerializationParameters SerializationParameters => new()
+        private JsonSerializerSettings SerializationParameters => new()
         {
-                    UserDefinedAdapters=Adapters
+            Converters=Converters
         };
 
-        public UnitySerializationCodec(IEnumerable<IJsonAdapter> adapters){
-            user_adapters=new(adapters);
+        public JsonSerializationCodec(){
+            user_converters=new();
+        }
+
+        public JsonSerializationCodec(IEnumerable<JsonConverter> converters){
+            user_converters=new(converters);
         }
 
         public T Read(RocketBinaryReader reader)
         {
-            
-            return JsonSerialization.FromJson<T>(
+            return JsonConvert.DeserializeObject<T>(
                 reader.ReadString(),
                 SerializationParameters
-            );
+            )!;
         }
 
         public void Write(T value, RocketBinaryWriter writer)
         {
             writer.WriteString(
-                JsonSerialization.ToJson(
+                JsonConvert.SerializeObject(
                     value,
                     SerializationParameters
                 )
@@ -94,19 +93,19 @@ namespace Com.DipoleCat.ExtensionLib.Networking
         }
     }
 
-    internal class IdAdapter : IJsonAdapter<NamespacedId>
+    internal class IdAdapter : JsonConverter<NamespacedId>
     {
-        public NamespacedId Deserialize(in JsonDeserializationContext<NamespacedId> context)
+        public override NamespacedId ReadJson(JsonReader reader, Type objectType, NamespacedId existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            if(context.SerializedValue.Type != TokenType.String) {
-                throw new SerializationException("Expect JSON string to deserialize to NamespacedId");
+            if(reader.TokenType != JsonToken.String) {
+                throw new JsonSerializationException("Expect JSON string to deserialize to NamespacedId");
             }
-            return new NamespacedId(context.SerializedValue.AsStringView().ToString());
+            return new NamespacedId(reader.ReadAsString()!);
         }
 
-        public void Serialize(in JsonSerializationContext<NamespacedId> context, NamespacedId value)
+        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, NamespacedId value, JsonSerializer serializer)
         {
-            context.Writer.WriteValue(value.Id);
+            writer.WriteValue(value.Id);
         }
     }
 }

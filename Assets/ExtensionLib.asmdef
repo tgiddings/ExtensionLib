@@ -19,7 +19,8 @@
         "0Harmony.dll",
         "LaunchPadBooster.dll",
         "Mono.Cecil.dll",
-        "Mono.Cecil.Rocks.dll"
+        "Mono.Cecil.Rocks.dll",
+        "Newtonsoft.Json.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

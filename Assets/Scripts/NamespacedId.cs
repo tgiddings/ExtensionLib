@@ -44,5 +44,9 @@ namespace Com.DipoleCat.ExtensionLib
         {
             return Id;
         }
+
+        public static NamespacedId operator /(NamespacedId id, string suffix){
+            return new NamespacedId($"{id}/{suffix}");
+        }
     }
 }
