@@ -24,6 +24,8 @@ namespace Com.DipoleCat.ExtensionLib
             MOD.AddPrefabs(prefabs);
             var harmony = new Harmony(MOD.ID.Name);
             VanillaMaterials.RegisterVanillaMaterials();
+            
+            CommandLine.AddCommand("debugatmos",new DebugAtmosCommand());
 #if DEVELOPMENT_BUILD
             Debug.Log($"Loaded {prefabs.Count} prefabs");
 #endif
