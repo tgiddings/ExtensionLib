@@ -117,11 +117,18 @@ namespace Com.DipoleCat.ExtensionLib
             }
         }
 
-        private static EvaporationCoefficients GetVanillaLiquidCoefficients(Chemistry.GasType gasType){
-            var stationeersAssembly = Assembly.GetAssembly(typeof(Mole));
-            var moleType = stationeersAssembly.GetType(nameof(Mole));
-            var antoineAMethod = moleType.GetMethod("EvaporationCoefficientA");
-            var antoineBMethod = moleType.GetMethod("EvaporationCoefficientB");
+        private static EvaporationCoefficients GetVanillaLiquidCoefficients(
+            Chemistry.GasType gasType
+        )
+        {
+            var antoineAMethod = typeof(MoleHelper).GetMethod(
+                "EvaporationCoefficientA",
+                BindingFlags.NonPublic | BindingFlags.Static
+            );
+            var antoineBMethod = typeof(MoleHelper).GetMethod(
+                "EvaporationCoefficientB",
+                BindingFlags.NonPublic | BindingFlags.Static
+            );
 
             return new EvaporationCoefficients(
                 (double)antoineAMethod.Invoke(null, new object[]{gasType}),
@@ -192,6 +199,13 @@ namespace Com.DipoleCat.ExtensionLib
             )
             .Build();
             Register(nitrogen);
+
+            var pollutant = BuildVanilla(
+                "pollutant",
+                Chemistry.GasType.Pollutant
+            )
+            .Build();
+            Register(pollutant);
 
             var water = BuildVanilla(
                 "water",

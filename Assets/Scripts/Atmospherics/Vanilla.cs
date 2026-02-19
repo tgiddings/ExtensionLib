@@ -23,7 +23,7 @@ namespace Com.DipoleCat.ExtensionLib.Atmospherics
             double molarMass,
             double molarVolume,
             SpecificHeat specificHeatCapacity){
-            Id = materialId / "liquid";
+            Id = materialId / "solid";
             MaterialId = materialId;
             MolarMass = molarMass;
             MolarVolume = molarVolume;
