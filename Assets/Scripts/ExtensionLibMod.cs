@@ -6,6 +6,11 @@ using Assets.Scripts.Objects;
 using JetBrains.Annotations;
 using System;
 using Assets.Scripts.Networking;
+using HarmonyLib;
+using Assets.Scripts;
+using Util.Commands;
+using Com.DipoleCat.ExtensionLib.Atmospherics;
+using System.Runtime.CompilerServices;
 
 namespace Com.DipoleCat.ExtensionLib
 {
@@ -17,9 +22,8 @@ namespace Com.DipoleCat.ExtensionLib
         public void OnLoaded(List<GameObject> prefabs)
         {
             MOD.AddPrefabs(prefabs);
-
-            
-
+            var harmony = new Harmony(MOD.ID.Name);
+            VanillaMaterials.RegisterVanillaMaterials();
 #if DEVELOPMENT_BUILD
             Debug.Log($"Loaded {prefabs.Count} prefabs");
 #endif
