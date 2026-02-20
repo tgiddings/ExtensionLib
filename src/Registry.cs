@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Assets.Scripts.Networking;
 using HarmonyLib;
 using Unity.Properties;
-using UnityEditor.PackageManager;
 using Com.DipoleCat.ExtensionLib.Networking;
 using System.Collections;
 

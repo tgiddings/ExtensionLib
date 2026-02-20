@@ -9,7 +9,6 @@ using Com.DipoleCat.ExtensionLib.Atmospherics;
 using Com.DipoleCat.ExtensionLib.Networking;
 using HarmonyLib;
 using Unity.Properties;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace Com.DipoleCat.ExtensionLib
