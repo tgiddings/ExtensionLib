@@ -13,7 +13,6 @@ using static Assets.Scripts.Atmospherics.Chemistry;
 
 namespace Com.DipoleCat.ExtensionLib.Atmospherics
 {
-#nullable enable
     public class DebugAtmosCommand : CommandBase
     {
         public override string HelpText => 

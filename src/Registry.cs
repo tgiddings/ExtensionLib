@@ -11,8 +11,6 @@ using System.Collections;
 
 namespace Com.DipoleCat.ExtensionLib
 {
-    #nullable enable
-
     public static class Registry{
         public static IRegistry Deserialize(RocketBinaryReader reader){
             var entries = Serialization.ReadStringArray(reader);

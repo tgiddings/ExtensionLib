@@ -12,10 +12,10 @@ using HarmonyLib;
 using System.Reflection;
 using UnityEngine;
 
-namespace Com.DipoleCat.ExtensionLib.Patches{
-    public static class PerformanceMonitor {
-
-        #nullable enable
+namespace Com.DipoleCat.ExtensionLib.Patches
+{
+    public static class PerformanceMonitor
+    {
         private static ConcurrentBag<MethodTime> methodTimes = new();
 
         private static int writeThreshold = 1_000;

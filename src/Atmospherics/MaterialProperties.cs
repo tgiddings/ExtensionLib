@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace Com.DipoleCat.ExtensionLib.Atmospherics
 {
-    #nullable enable
     public class VanillaMaterialBuilder{
         public NamespacedId Id {get;}
         public double MolarMass {get;}

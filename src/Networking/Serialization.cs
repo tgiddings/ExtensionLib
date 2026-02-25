@@ -4,7 +4,6 @@ using Assets.Scripts.Networking;
 
 namespace Com.DipoleCat.ExtensionLib.Networking
 {
-    #nullable enable
     public static class Serialization{
         
         public static void WriteVarInt(uint value, RocketBinaryWriter writer){

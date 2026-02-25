@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Com.DipoleCat.ExtensionLib.Atmospherics
 {
-    #nullable enable
 
     public readonly struct VanillaSolidPhaseProperties : ICondensedPhaseProperties{
         public NamespacedId Id{get;}

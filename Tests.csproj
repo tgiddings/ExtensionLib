@@ -18,7 +18,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Tests</AssemblyName>
     <TargetFramework>net8.0</TargetFramework>
-    <RuntimeFrameworkVersion>net8.0</RuntimeFrameworkVersion>
 
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -38,6 +37,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <UnityVersion>2022.3.62f3</UnityVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="tests/**/*.cs" />

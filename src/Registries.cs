@@ -13,7 +13,6 @@ using UnityEngine;
 
 namespace Com.DipoleCat.ExtensionLib
 {
-    #nullable enable
     public static class Registries{
         private static readonly Dictionary<NamespacedId,IRegistry> local_registries = new();
         private static readonly Dictionary<NamespacedId,IRegistry> synced_registries = new();

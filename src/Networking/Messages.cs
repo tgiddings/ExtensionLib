@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.Linq;
 
-namespace Com.DipoleCat.ExtensionLib.Networking{
-
-    #nullable enable
+namespace Com.DipoleCat.ExtensionLib.Networking
+{
     internal class RegistrySyncListMessage: ModNetworkMessage<RegistrySyncListMessage>{
         private readonly List<NamespacedId> registry_list = new();
 

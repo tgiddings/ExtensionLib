@@ -37,6 +37,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <UnityVersion>2022.3.62f3</UnityVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="src/**/*.cs" />

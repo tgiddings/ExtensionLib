@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 
 namespace Com.DipoleCat.ExtensionLib.Networking
 {
-    #nullable enable
     public static class Codecs{
         public static INetworkCodec<string> StringCodec{get;} = new StringCodec();
         public static INetworkCodec<NamespacedId> IdCodec{get;} = new IdCodec();

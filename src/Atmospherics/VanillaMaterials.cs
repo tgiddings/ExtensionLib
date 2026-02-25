@@ -7,7 +7,6 @@ using static Assets.Scripts.Atmospherics.Chemistry;
 
 namespace Com.DipoleCat.ExtensionLib.Atmospherics
 {
-    #nullable enable
     public static class VanillaMaterials {
         public static NamespacedId Oxygen => new NamespacedId("stationeers","oxygen");
         public static NamespacedId Nitrogen => new NamespacedId("stationeers","nitrogen");
