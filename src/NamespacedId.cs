@@ -4,6 +4,7 @@ using UnityEngine;
 namespace Com.DipoleCat.ExtensionLib
 {
     public readonly struct NamespacedId {
+        public static readonly NamespacedId EMPTY = new();
         public readonly string Id {get;}
         public readonly string Namespace => Id.Split(":")[0];
         public readonly string Name => Id.Split(":")[1];

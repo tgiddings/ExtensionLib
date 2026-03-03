@@ -23,6 +23,7 @@ namespace Com.DipoleCat.ExtensionLib
         {
             MOD.AddPrefabs(prefabs);
             var harmony = new Harmony(MOD.ID.Name);
+            harmony.PatchAll();
             VanillaMaterials.RegisterVanillaMaterials();
             
             CommandLine.AddCommand("debugatmos",new DebugAtmosCommand());
