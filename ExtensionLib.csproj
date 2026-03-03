@@ -54,7 +54,7 @@
     <ExtensionLibModDirectory>$(StationeersModsDirectory)/ExtensionLib</ExtensionLibModDirectory>
   </PropertyGroup>
 
-  <Target Name="Deploy" DependsOnTargets="PostBuildEvent">
+  <Target Name="Deploy" DependsOnTargets="Build">
     <MakeDir Directories="$(ExtensionLibModDirectory)" />
     <MakeDir Directories="$(ExtensionLibModDirectory)\About" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ExtensionLibModDirectory)" />
