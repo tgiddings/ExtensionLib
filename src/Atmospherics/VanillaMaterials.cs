@@ -11,7 +11,7 @@ namespace Com.DipoleCat.ExtensionLib.Atmospherics
         public static NamespacedId Oxygen => new NamespacedId("stationeers","oxygen");
         public static NamespacedId Nitrogen => new NamespacedId("stationeers","nitrogen");
         public static NamespacedId CarbonDioxide => new NamespacedId("stationeers","carbon_dioxide");
-        public static NamespacedId Volatiles => new NamespacedId("stationeers","volatiles");
+        public static NamespacedId Methane => new NamespacedId("stationeers","volatiles");
         public static NamespacedId Pollutant => new NamespacedId("stationeers","pollutant");
         public static NamespacedId NitrousOxide => new NamespacedId("stationeers","nitrous_oxide");
 
@@ -27,8 +27,8 @@ namespace Com.DipoleCat.ExtensionLib.Atmospherics
                 "stationeers:nitrogen/liquid" => (GasType?)Assets.Scripts.Atmospherics.Chemistry.GasType.LiquidNitrogen,
                 "stationeers:carbon_dioxide/gas" => (GasType?)Assets.Scripts.Atmospherics.Chemistry.GasType.CarbonDioxide,
                 "stationeers:carbon_dioxide/liquid" => (GasType?)Assets.Scripts.Atmospherics.Chemistry.GasType.LiquidCarbonDioxide,
-                "stationeers:volatiles/gas" => (GasType?)Assets.Scripts.Atmospherics.Chemistry.GasType.Volatiles,
-                "stationeers:volatiles/liquid" => (GasType?)Assets.Scripts.Atmospherics.Chemistry.GasType.LiquidVolatiles,
+                "stationeers:volatiles/gas" => (GasType?)Assets.Scripts.Atmospherics.Chemistry.GasType.Methane,
+                "stationeers:volatiles/liquid" => (GasType?)Assets.Scripts.Atmospherics.Chemistry.GasType.LiquidMethane,
                 "stationeers:pollutant/gas" => (GasType?)Assets.Scripts.Atmospherics.Chemistry.GasType.Pollutant,
                 "stationeers:pollutant/liquid" => (GasType?)Assets.Scripts.Atmospherics.Chemistry.GasType.LiquidPollutant,
                 "stationeers:nitrous_oxide/gas" => (GasType?)Assets.Scripts.Atmospherics.Chemistry.GasType.NitrousOxide,
@@ -46,7 +46,7 @@ namespace Com.DipoleCat.ExtensionLib.Atmospherics
                 Assets.Scripts.Atmospherics.Chemistry.GasType.Oxygen or Assets.Scripts.Atmospherics.Chemistry.GasType.LiquidOxygen => (NamespacedId?)Oxygen,
                 Assets.Scripts.Atmospherics.Chemistry.GasType.Nitrogen or Assets.Scripts.Atmospherics.Chemistry.GasType.LiquidNitrogen => (NamespacedId?)Nitrogen,
                 Assets.Scripts.Atmospherics.Chemistry.GasType.CarbonDioxide or Assets.Scripts.Atmospherics.Chemistry.GasType.LiquidCarbonDioxide => (NamespacedId?)CarbonDioxide,
-                Assets.Scripts.Atmospherics.Chemistry.GasType.Volatiles or Assets.Scripts.Atmospherics.Chemistry.GasType.LiquidVolatiles => (NamespacedId?)Volatiles,
+                Assets.Scripts.Atmospherics.Chemistry.GasType.Methane or Assets.Scripts.Atmospherics.Chemistry.GasType.Methane => (NamespacedId?)Methane,
                 Assets.Scripts.Atmospherics.Chemistry.GasType.Pollutant or Assets.Scripts.Atmospherics.Chemistry.GasType.LiquidPollutant => (NamespacedId?)Pollutant,
                 Assets.Scripts.Atmospherics.Chemistry.GasType.NitrousOxide or Assets.Scripts.Atmospherics.Chemistry.GasType.LiquidNitrousOxide => (NamespacedId?)NitrousOxide,
                 Assets.Scripts.Atmospherics.Chemistry.GasType.Steam or Assets.Scripts.Atmospherics.Chemistry.GasType.Water => (NamespacedId?)Water,
@@ -64,8 +64,8 @@ namespace Com.DipoleCat.ExtensionLib.Atmospherics
                 Assets.Scripts.Atmospherics.Chemistry.GasType.LiquidNitrogen => Nitrogen / "liquid",
                 Assets.Scripts.Atmospherics.Chemistry.GasType.CarbonDioxide => CarbonDioxide,
                 Assets.Scripts.Atmospherics.Chemistry.GasType.LiquidCarbonDioxide => CarbonDioxide / "liquid",
-                Assets.Scripts.Atmospherics.Chemistry.GasType.Volatiles => Volatiles / "gas",
-                Assets.Scripts.Atmospherics.Chemistry.GasType.LiquidVolatiles => Volatiles / "liquid",
+                Assets.Scripts.Atmospherics.Chemistry.GasType.Methane => Methane / "gas",
+                Assets.Scripts.Atmospherics.Chemistry.GasType.LiquidMethane => Methane / "liquid",
                 Assets.Scripts.Atmospherics.Chemistry.GasType.Pollutant => Pollutant / "gas",
                 Assets.Scripts.Atmospherics.Chemistry.GasType.LiquidPollutant => Pollutant / "liquid",
                 Assets.Scripts.Atmospherics.Chemistry.GasType.NitrousOxide => NitrousOxide / "gas",
@@ -103,9 +103,9 @@ namespace Com.DipoleCat.ExtensionLib.Atmospherics
             .Build();
             Registries.Register(carbonDioxide);
 
-            var volatiles = BuildVanilla(
-                "volatiles",
-                Chemistry.GasType.Volatiles
+            var methane = BuildVanilla(
+                "methane",
+                Chemistry.GasType.Methane
             )
             .Fuel(
                 MoleQuantity.One,
@@ -114,7 +114,7 @@ namespace Com.DipoleCat.ExtensionLib.Atmospherics
                 }
             )
             .Build();
-            Registries.Register(volatiles);
+            Registries.Register(methane);
 
             var nitrogen = BuildVanilla(
                 "nitrogen",
