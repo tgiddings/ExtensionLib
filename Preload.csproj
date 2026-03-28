@@ -1,5 +1,5 @@
 ﻿<Project ToolsVersion="Current">
-  <Import Project="$(SolutionDir)StationeersImports.props" />
+  <Import Project="$(SolutionDir)Stationeers.props" />
   <PropertyGroup>
     <!--keeps tests and extensionlib builds from steppin on each other-->
     <BaseIntermediateOutputPath>Temp/obj/$(Configuration)/$(MSBuildProjectName)</BaseIntermediateOutputPath>
@@ -13,10 +13,10 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 
-    <RootNamespace>Com.Dipolecat.ExtensionLib</RootNamespace>
+    <RootNamespace>Com.Dipolecat.ExtensionLib.Preload</RootNamespace>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>ExtensionLib</AssemblyName>
+    <AssemblyName>ExtensionLib.Preload</AssemblyName>
     <TargetFramework>netstandard2.1</TargetFramework>
 
     <ErrorReport>prompt</ErrorReport>
@@ -36,37 +36,21 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup>
-    <UnityVersion>2022.3.62f3</UnityVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="src/**/*.cs" />
+    <Compile Include="preload/**/*.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="About/**" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>
-    <PackageReference Include="Unity3D" Version="3.1.1" />
-    <ProjectReference Include="Preload.csproj">
-      <Private>False</Private>
-      <CopyLocalSatelliteAssemblies>False</CopyLocalSatelliteAssemblies>
-      <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
-    </ProjectReference>
-
+    <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
+    <PackageReference Include="Mono.Cecil" Version="0.10" />
   </ItemGroup>
 
   <PropertyGroup>
     <ExtensionLibModDirectory>$(StationeersModsDirectory)/ExtensionLib</ExtensionLibModDirectory>
   </PropertyGroup>
-
-  <Target Name="Deploy" DependsOnTargets="Build">
-    <MakeDir Directories="$(ExtensionLibModDirectory)" />
-    <MakeDir Directories="$(ExtensionLibModDirectory)\About" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ExtensionLibModDirectory)" />
-    <Copy SourceFiles="$(TargetPath)/../ExtensionLib.Preload.dll" DestinationFolder="/home/cat/.steam/debian-installation/steamapps/common/Stationeers/BepInEx/patchers/" />
-    <Copy SourceFiles="About\About.xml" DestinationFiles="$(ExtensionLibModDirectory)\About\About.xml" />
-    <Copy SourceFiles="About\Thumb.png" DestinationFiles="$(ExtensionLibModDirectory)\About\Thumb.png" />
-    <Copy SourceFiles="About\Preview.png" DestinationFiles="$(ExtensionLibModDirectory)\About\Preview.png" />
-  </Target>
 </Project>

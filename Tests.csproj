@@ -1,5 +1,5 @@
 ﻿<Project ToolsVersion="Current">
-  <Import Project="$(SolutionDir)Stationeers.props" />
+  <Import Project="$(SolutionDir)StationeersImports.props" />
   <PropertyGroup>
     <!--keeps tests and extensionlib builds from steppin on each other-->
     <BaseIntermediateOutputPath>Temp/obj/$(Configuration)/$(MSBuildProjectName)</BaseIntermediateOutputPath>
